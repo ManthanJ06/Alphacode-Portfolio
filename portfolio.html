@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manthan Jadhav — Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+
+/* ── Reset & Base ─────────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:        #09090b;
+  --surface:   #111113;
+  --border:    #1f1f23;
+  --accent:    #00e5a0;
+  --accent2:   #00b87a;
+  --text:      #f4f4f5;
+  --muted:     #71717a;
+  --card:      #131316;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Custom Cursor ────────────────────────────────────────────────────── */
+#cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+}
+
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: left 0.12s ease, top 0.12s ease, width 0.2s, height 0.2s, opacity 0.2s;
+  opacity: 0.5;
+}
+
+body:hover #cursor { opacity: 1; }
+
+/* ── Noise texture overlay ────────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.35;
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 60px;
+  background: rgba(9,9,11,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links { display: flex; gap: 36px; list-style: none; }
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+/* ── Section base ─────────────────────────────────────────────────────── */
+section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 100px 60px;
+}
+
+.section-label {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  max-width: 60px;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.4;
+}
+
+h2.section-title {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 60px;
+  color: var(--text);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+  opacity: 0.4;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,229,160,0.08) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero-content { position: relative; z-index: 2; }
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(52px, 7vw, 90px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  margin-bottom: 12px;
+}
+
+h1 .line2 {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(244,244,245,0.3);
+}
+
+.hero-sub {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--muted);
+  max-width: 540px;
+  margin: 24px 0 48px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.hero-sub strong { color: var(--text); font-weight: 500; }
+
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent);
+  color: #09090b;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 0 0 0 rgba(0,229,160,0.4);
+}
+
+.btn-primary:hover {
+  background: #00ffb3;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,229,160,0.25);
+}
+
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s;
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 72px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+.stat-num {
+  font-family: var(--font-head);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── About ────────────────────────────────────────────────────────────── */
+#about {
+  border-top: 1px solid var(--border);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.about-text p {
+  color: #a1a1aa;
+  font-size: 16px;
+  line-height: 1.85;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.about-text p strong { color: var(--text); font-weight: 500; }
+
+.contact-list {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  list-style: none;
+}
+
+.contact-list li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.contact-list li a:hover { color: var(--accent); }
+
+.contact-list .icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.contact-list li a:hover .icon {
+  border-color: var(--accent);
+  background: rgba(0,229,160,0.06);
+}
+
+.edu-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-top: 0;
+}
+
+.edu-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.edu-degree {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.edu-badge {
+  background: rgba(0,229,160,0.1);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.edu-sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+.edu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+
+.edu-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.edu-row span:last-child { color: var(--text); font-weight: 500; }
+
+/* ── Skills ───────────────────────────────────────────────────────────── */
+#skills { border-top: 1px solid var(--border); }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.skill-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,229,160,0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.skill-card:hover { border-color: rgba(0,229,160,0.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+.skill-card:hover::after { opacity: 1; }
+
+.skill-category {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.skill-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.skill-name {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skill-tag {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 9px;
+  font-size: 12px;
+  color: #a1a1aa;
+}
+
+/* ── Projects ─────────────────────────────────────────────────────────── */
+#projects { border-top: 1px solid var(--border); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  border-color: rgba(0,229,160,0.25);
+}
+
+.project-banner {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-banner svg { opacity: 0.15; }
+
+.project-banner-icon {
+  position: absolute;
+  font-size: 52px;
+  filter: grayscale(0.3);
+}
+
+.project-body { padding: 28px; flex: 1; display: flex; flex-direction: column; }
+
+.project-tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.project-tech {
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.15);
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.3px;
+}
+
+.project-title {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+.project-desc {
+  color: #71717a;
+  font-size: 14px;
+  line-height: 1.7;
+  font-weight: 300;
+  flex: 1;
+}
+
+.project-features {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.project-features li {
+  font-size: 13px;
+  color: #71717a;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.project-features li::before {
+  content: '→';
+  color: var(--accent);
+  flex-shrink: 0;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ── Strengths ────────────────────────────────────────────────────────── */
+#strengths { border-top: 1px solid var(--border); }
+
+.strengths-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.strength-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.strength-card:hover {
+  border-color: rgba(0,229,160,0.3);
+  transform: translateY(-3px);
+}
+
+.strength-icon { font-size: 36px; margin-bottom: 16px; }
+
+.strength-title {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.strength-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-name {
+  font-family: var(--font-head);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+
+.footer-name span { color: var(--accent); }
+
+.footer-sub {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.footer-links a:hover { color: var(--accent); border-color: var(--accent); }
+
+.footer-copy { font-size: 12px; color: #3f3f46; }
+
+/* ── Scroll reveal ────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  section { padding: 80px 24px; }
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .strengths-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; flex-wrap: wrap; }
+  body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="#hero" class="nav-logo">MJ<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#strengths">Strengths</a></li>
+    <li><a href="mailto:manthanj106@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+
+    <div class="hero-tag">Available for opportunities</div>
+
+    <h1>
+      Manthan
+      <span class="line2">Jadhav.</span>
+    </h1>
+
+    <p class="hero-sub">
+      <strong>Full-Stack MERN Developer</strong> based in Mumbai. I build
+      real-time applications, REST APIs, and secure authentication systems
+      — turning ideas into fast, scalable products.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        View Projects
+      </a>
+      <a href="mailto:manthanj106@gmail.com" class="btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Get in Touch
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">8.70</div>
+        <div class="stat-label">CGPA / 10</div>
+      </div>
+      <div>
+        <div class="stat-num">2+</div>
+        <div class="stat-label">Full-Stack Projects</div>
+      </div>
+      <div>
+        <div class="stat-num">8+</div>
+        <div class="stat-label">Technologies</div>
+      </div>
+      <div>
+        <div class="stat-num">2026</div>
+        <div class="stat-label">Graduating</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── ABOUT ─────────────────────────────────────────────────────────── -->
+<section id="about">
+  <div class="section-label">01 — About</div>
+  <h2 class="section-title">Who I Am</h2>
+
+  <div class="about-grid reveal">
+
+    <div class="about-text">
+      <p>
+        I'm a <strong>final-year B.Sc. IT student</strong> at Mumbai with a strong foundation
+        in full-stack web development. I specialize in the <strong>MERN stack</strong> — building
+        everything from real-time chat systems to secure authentication flows.
+      </p>
+      <p>
+        I'm passionate about writing clean, efficient code and constantly learning
+        new patterns and technologies. My focus areas include <strong>WebSocket-driven
+        real-time features</strong>, <strong>REST API design</strong>, and building
+        seamless front-to-back integrations.
+      </p>
+      <p>
+        Outside of code, I enjoy problem-solving and logical puzzles — which naturally
+        feeds into how I approach engineering challenges.
+      </p>
+
+      <ul class="contact-list">
+        <li>
+          <a href="mailto:manthanj106@gmail.com">
+            <span class="icon">✉</span>
+            manthanj106@gmail.com
+          </a>
+        </li>
+        <li>
+          <a href="tel:+918356048243">
+            <span class="icon">📞</span>
+            +91 83560 48243
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/manthanJ06" target="_blank">
+            <span class="icon">⌥</span>
+            github.com/manthanJ06
+          </a>
+        </li>
+        <li>
+          <a href="https://linkedin.com/in/manthan-jadhav-184853299" target="_blank">
+            <span class="icon">in</span>
+            linkedin.com/in/manthan-jadhav-184853299
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="icon">📍</span>
+            Mumbai, Maharashtra
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="edu-card">
+        <div class="edu-card-head">
+          <div class="edu-degree">B.Sc. Information Technology</div>
+          <div class="edu-badge">8.70 CGPA</div>
+        </div>
+        <div class="edu-sub">Final Year · Graduating 2026</div>
+        <div class="edu-divider"></div>
+        <div class="edu-row"><span>Degree</span><span>B.Sc. IT</span></div>
+        <div class="edu-row"><span>Status</span><span>Final Year</span></div>
+        <div class="edu-row"><span>CGPA</span><span>8.70 / 10</span></div>
+        <div class="edu-row"><span>HSC</span><span>65%</span></div>
+        <div class="edu-row"><span>Location</span><span>Mumbai, MH</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SKILLS ────────────────────────────────────────────────────────── -->
+<section id="skills">
+  <div class="section-label">02 — Skills</div>
+  <h2 class="section-title">Tech Stack</h2>
+
+  <div class="skills-grid">
+
+    <div class="skill-card reveal">
+      <div class="skill-category">Frontend</div>
+      <div class="skill-icon">🎨</div>
+      <div class="skill-name">UI Development</div>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML5</span>
+        <span class="skill-tag">CSS3</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">React.js</span>
+        <span class="skill-tag">Next.js</span>
+        <span class="skill-tag">Tailwind CSS</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-category">Backend</div>
+      <div class="skill-icon">⚙️</div>
+      <div class="skill-name">Server & APIs</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Express.js</span>
+        <span class="skill-tag">REST APIs</span>
+        <span class="skill-tag">JWT Auth</span>
+        <span class="skill-tag">WebSockets</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-category">Database</div>
+      <div class="skill-icon">🗄️</div>
+      <div class="skill-name">Data Storage</div>
+      <div class="skill-tags">
+        <span class="skill-tag">MongoDB</span>
+        <span class="skill-tag">CRUD</span>
+        <span class="skill-tag">Schema Design</span>
+        <span class="skill-tag">Mongoose</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-category">Tools & Concepts</div>
+      <div class="skill-icon">🛠</div>
+      <div class="skill-name">Dev Workflow</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">GitHub</span>
+        <span class="skill-tag">VS Code</span>
+        <span class="skill-tag">Postman</span>
+        <span class="skill-tag">DSA</span>
+        <span class="skill-tag">Socket.IO</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PROJECTS ──────────────────────────────────────────────────────── -->
+<section id="projects">
+  <div class="section-label">03 — Projects</div>
+  <h2 class="section-title">What I've Built</h2>
+
+  <div class="projects-grid">
+
+    <!-- Project 1 -->
+    <div class="project-card reveal">
+      <div class="project-banner" style="background: linear-gradient(135deg, #0d1f14 0%, #0a1a1f 100%);">
+        <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+          <circle cx="80" cy="100" r="120" fill="rgba(0,229,160,0.05)"/>
+          <circle cx="320" cy="60" r="80" fill="rgba(0,184,122,0.06)"/>
+          <line x1="60" y1="80" x2="200" y2="120" stroke="rgba(0,229,160,0.12)" stroke-width="1"/>
+          <line x1="200" y1="120" x2="340" y2="80" stroke="rgba(0,229,160,0.12)" stroke-width="1"/>
+          <line x1="100" y1="140" x2="300" y2="100" stroke="rgba(0,229,160,0.08)" stroke-width="1"/>
+        </svg>
+        <div class="project-banner-icon">💬</div>
+      </div>
+      <div class="project-body">
+        <div class="project-tech-row">
+          <span class="project-tech">React</span>
+          <span class="project-tech">Node.js</span>
+          <span class="project-tech">Socket.IO</span>
+          <span class="project-tech">MongoDB</span>
+        </div>
+        <div class="project-title">Real-Time Chat Application</div>
+        <p class="project-desc">
+          A full-featured messaging platform with private chats, real-time delivery
+          and a dynamic UI — all powered by WebSockets.
+        </p>
+        <ul class="project-features">
+          <li>Real-time private messaging using WebSockets (Socket.IO)</li>
+          <li>User-based chat system with dynamic UI rendering</li>
+          <li>Multi-user communication with optimized message sync</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project-card reveal">
+      <div class="project-banner" style="background: linear-gradient(135deg, #1a0d1a 0%, #1a1a0d 100%);">
+        <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+          <rect x="140" y="50" width="120" height="100" rx="12" fill="none" stroke="rgba(0,229,160,0.1)" stroke-width="1.5"/>
+          <rect x="160" y="70" width="80" height="12" rx="3" fill="rgba(0,229,160,0.06)"/>
+          <rect x="160" y="90" width="60" height="8" rx="2" fill="rgba(0,229,160,0.04)"/>
+          <circle cx="80" cy="80" r="40" fill="none" stroke="rgba(0,229,160,0.06)" stroke-width="1"/>
+          <circle cx="320" cy="130" r="50" fill="none" stroke="rgba(0,229,160,0.05)" stroke-width="1"/>
+        </svg>
+        <div class="project-banner-icon">🔐</div>
+      </div>
+      <div class="project-body">
+        <div class="project-tech-row">
+          <span class="project-tech">Node.js</span>
+          <span class="project-tech">Express.js</span>
+          <span class="project-tech">MongoDB</span>
+          <span class="project-tech">React</span>
+          <span class="project-tech">JWT</span>
+        </div>
+        <div class="project-title">Authentication System</div>
+        <p class="project-desc">
+          A robust, production-ready auth system with secure login, registration,
+          JWT-based sessions and protected routes.
+        </p>
+        <ul class="project-features">
+          <li>Secure login/register with JWT authentication</li>
+          <li>Protected routes and bcrypt password hashing</li>
+          <li>Seamless frontend–backend API integration</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── STRENGTHS ─────────────────────────────────────────────────────── -->
+<section id="strengths">
+  <div class="section-label">04 — Strengths</div>
+  <h2 class="section-title">What Drives Me</h2>
+
+  <div class="strengths-grid">
+    <div class="strength-card reveal">
+      <div class="strength-icon">🧩</div>
+      <div class="strength-title">Problem Solving</div>
+      <p class="strength-desc">
+        I thrive on breaking complex problems into logical, manageable pieces and
+        engineering clean solutions from first principles.
+      </p>
+    </div>
+    <div class="strength-card reveal">
+      <div class="strength-icon">⚡</div>
+      <div class="strength-title">Fast Learner</div>
+      <p class="strength-desc">
+        I pick up new technologies and frameworks quickly, adapting to evolving
+        project needs without losing momentum.
+      </p>
+    </div>
+    <div class="strength-card reveal">
+      <div class="strength-icon">🏗</div>
+      <div class="strength-title">Full-Stack Fundamentals</div>
+      <p class="strength-desc">
+        Strong grasp of both client-side and server-side concerns — from React UIs
+        to Node APIs and MongoDB schemas.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-name">Manthan<span>.</span></div>
+  <p class="footer-sub">Full-Stack MERN Developer · Mumbai, India</p>
+  <div class="footer-links">
+    <a href="mailto:manthanj106@gmail.com">✉ manthanj106@gmail.com</a>
+    <a href="https://github.com/manthanJ06" target="_blank">⌥ GitHub</a>
+    <a href="https://linkedin.com/in/manthan-jadhav-184853299" target="_blank">in LinkedIn</a>
+    <a href="tel:+918356048243">📞 +91 83560 48243</a>
+  </div>
+  <p class="footer-copy">© 2025 Manthan Bapu Jadhav · Built with HTML, CSS & JS</p>
+</footer>
+
+<script>
+// ── Custom cursor ────────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx = 0, my = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+  ring.style.left   = mx + 'px';
+  ring.style.top    = my + 'px';
+});
+
+document.querySelectorAll('a, button, .skill-card, .project-card, .strength-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width  = '18px';
+    cursor.style.height = '18px';
+    ring.style.width    = '52px';
+    ring.style.height   = '52px';
+    ring.style.opacity  = '0.8';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width  = '10px';
+    cursor.style.height = '10px';
+    ring.style.width    = '36px';
+    ring.style.height   = '36px';
+    ring.style.opacity  = '0.5';
+  });
+});
+
+// ── Scroll reveal ────────────────────────────────────────────────────
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.12 });
+
+reveals.forEach(el => observer.observe(el));
+
+// ── Skill card mouse glow ────────────────────────────────────────────
+document.querySelectorAll('.skill-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1);
+    const y = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
+    card.style.setProperty('--mx', x + '%');
+    card.style.setProperty('--my', y + '%');
+  });
+});
+
+// ── Smooth active nav highlight ───────────────────────────────────────
+const sections = document.querySelectorAll('section[id]');
+const navLinks  = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current
+      ? 'var(--accent)' : '';
+  });
+}, { passive: true });
+
+// ── Typewriter on hero name ──────────────────────────────────────────
+const line2 = document.querySelector('h1 .line2');
+const txt = 'Jadhav.';
+let i = 0;
+line2.textContent = '';
+function type() {
+  if (i < txt.length) {
+    line2.textContent += txt[i++];
+    setTimeout(type, 90);
+  }
+}
+setTimeout(type, 600);
+</script>
+</body>
+</html>
